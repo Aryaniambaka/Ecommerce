@@ -145,38 +145,38 @@ def view_product(request:Request,id,db:Session=Depends(database.get_db)):
         "Inventory": product_complete_db[1].Inventory,
         "CompanyName": seller_detail[1].CompanyName
     }
-@router.post("/addtocart/{id}")
-def add_to_cart(id,db:Session=Depends(database.get_db),current_user:model.User=Depends(Oauth2.current_user)):
-    get_product = db.query(model.Product).filter(model.Product.productId == id).first()
-    if get_product is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product Not Found")
-    product_complete_db = db.query(model.Product, model.PriceandInventory).join(model.PriceandInventory,
-                                                                                model.Product.productId == model.PriceandInventory.productid).filter(
-        model.Product.productId == id).first()
-    if product_complete_db is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Product Does not exits")
-    if product_complete_db[1].Inventory <= 0:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Product Out of stock")
-    seller_detail = db.query(model.Product, model.SellerProfile).join(model.SellerProfile,model.Product.sellerid == model.SellerProfile.currentsellerid).filter(model.Product.productId == id).first()
-    if seller_detail is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Seller details not found")
-    if db.query(model.Cart).filter(model.Cart.UserId == current_user.id).filter(model.Cart.productid == product_complete_db[0].productId).first() is not None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Product already in cart")
-
-    cart=model.Cart(
-        productid=product_complete_db[0].productid,
-        Price=product_complete_db[1].Price,
-        ProductName=product_complete_db[0].productName,
-        img1=product_complete_db[0].img1,
-        UserId=current_user.id
-
-    )
-    db.add(cart)
-    db.commit()
-    db.refresh(cart)
-    return {
-        "message":"Successfully added to cart"
-    }
+# @router.post("/addtocart/{id}")
+# def add_to_cart(id,db:Session=Depends(database.get_db),current_user:model.User=Depends(Oauth2.current_user)):
+#     get_product = db.query(model.Product).filter(model.Product.productId == id).first()
+#     if get_product is None:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product Not Found")
+#     product_complete_db = db.query(model.Product, model.PriceandInventory).join(model.PriceandInventory,
+#                                                                                 model.Product.productId == model.PriceandInventory.productid).filter(
+#         model.Product.productId == id).first()
+#     if product_complete_db is None:
+#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Product Does not exits")
+#     if product_complete_db[1].Inventory <= 0:
+#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Product Out of stock")
+#     seller_detail = db.query(model.Product, model.SellerProfile).join(model.SellerProfile,model.Product.sellerid == model.SellerProfile.currentsellerid).filter(model.Product.productId == id).first()
+#     if seller_detail is None:
+#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Seller details not found")
+#     if db.query(model.Cart).filter(model.Cart.UserId == current_user.id).filter(model.Cart.productid == product_complete_db[0].productId).first() is not None:
+#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Product already in cart")
+#
+#     cart=model.Cart(
+#         productid=product_complete_db[0].productid,
+#         Price=product_complete_db[1].Price,
+#         ProductName=product_complete_db[0].productName,
+#         img1=product_complete_db[0].img1,
+#         UserId=current_user.id
+#
+#     )
+#     db.add(cart)
+#     db.commit()
+#     db.refresh(cart)
+#     return {
+#         "message":"Successfully added to cart"
+#     }
 
 @router.delete("/myproduct/{id}")
 def deleteproduct(id,db:Session=Depends(database.get_db),current_user:model.User=Depends(Oauth2.current_user)):

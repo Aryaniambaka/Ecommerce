@@ -13,6 +13,8 @@ from sqlalchemy import or_,and_
 from sqlalchemy.orm import Session, outerjoin
 from typing import List
 
+from sqlalchemy.sql.functions import current_user
+
 from .. import schemas, Oauth2, model, database,utility
 router=APIRouter(
     prefix="/cart",
@@ -51,14 +53,21 @@ def add_to_cart(id,db:Session=Depends(database.get_db),current_user:model.User=D
     return {
         "message":"Successfully added to cart"
     }
-@router.patch("/updatequantity/{cartid}")
-def update_cart(cartid,user_response:schemas.updateqty,current_user:model.User=Depends(Oauth2.current_user),db:Session=Depends(database.get_db)):
-    db_query1 = db.query(model.Cart).filter(model.Cart.id == cartid).first()
+@router.patch("/updatequantity/{productid}")
+def update_cart(productid,user_response:schemas.updateqty,current_user:model.User=Depends(Oauth2.current_user),db:Session=Depends(database.get_db)):
+    product_complete_db = db.query(model.Product, model.PriceandInventory).join(model.PriceandInventory,
+                                                                                model.Product.productId == model.PriceandInventory.productid).filter(
+        model.Product.productId == productid).first()
+    if product_complete_db is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product Not Found")
+    db_query1 = db.query(model.Cart).filter(model.Cart.productid == productid).filter(model.Cart.UserId==current_user.id).first()
+    if user_response.Quantity > product_complete_db[1].Inventory:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Not enough inventory")
     if db_query1 is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cart item dont exits")
     if db_query1.UserId != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="This cart dont belongs to you")
-    db_query=db.query(model.Cart).filter(model.Cart.id==cartid).update({"Quantity":user_response.Quantity},synchronize_session=False)
+    db_query=db.query(model.Cart).filter(model.Cart.productid==productid).filter(model.Cart.UserId==current_user.id).update({"Quantity":user_response.Quantity},synchronize_session=False)
 
     db.commit()
     db.refresh(db_query1)

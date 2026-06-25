@@ -13,6 +13,13 @@ def client(session):
     app.dependency_overrides[get_db]=override_db
     yield TestClient(app)
     app.dependency_overrides.clear()
+@pytest.fixture
+def client2(session):# always create different client for each fixture if mutiple has same client so only lastest cookies left so ecah client each browser
+    def override_db():
+        yield session
+    app.dependency_overrides[get_db]=override_db
+    yield TestClient(app)
+    app.dependency_overrides.clear()
 @pytest.fixture(params=[
     ("test1@gmail.com","string"),
     ("test2@gmail.com","string"),
@@ -60,12 +67,12 @@ def S_auth_client(client,token_generateS):
 
 @pytest.fixture(params=[
 
-    ("aryankumar4sep@gmail.com","string")
+    ("aryankumar4sep+seller@gmail.com","string")
 ])
-def seller(client,request):
+def seller(client2,request):
     email,password=request.param
     credential={"email":email,"password":password}
-    response=client.post("/seller/login/create",json=credential)
+    response=client2.post("/seller/login/create",json=credential)
     user=response.json()
     user["password"] = password
     assert response.status_code == 201
@@ -76,6 +83,6 @@ def seller(client,request):
 def token_generateseller(seller):
     return Oauth2.create_access_token({"id":seller["id"],"email":seller["email"]})
 @pytest.fixture
-def Seller_auth_client(client,token_generateseller):
-    client.cookies.set("access_token",token_generateseller)
-    return client
+def Seller_auth_client(client2,token_generateseller):
+    client2.cookies.set("access_token",token_generateseller)
+    return client2

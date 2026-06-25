@@ -51,10 +51,17 @@ async def checkout(Background_task:BackgroundTasks,current_user:model.User=Depen
 
 
         )
-        x=db.query(model.PriceandInventory).filter(model.PriceandInventory.productid==objects.productid).first()
-        qty=x.Inventory  # type: ignore[union-attr]
-        db.query(model.PriceandInventory).filter(model.PriceandInventory.productid == objects.productid).update({"Inventory":qty-objects.Quantity},synchronize_session=False)
+        x = db.query(model.PriceandInventory).filter(model.PriceandInventory.productid == objects.productid).first()
+        qty = x.Inventory  # type: ignore[union-attr]
 
+        if qty < objects.Quantity:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Not enough inventory"
+            )
+
+        db.query(model.PriceandInventory).filter(model.PriceandInventory.productid == objects.productid).update(
+            {"Inventory": qty - objects.Quantity}, synchronize_session=False)
 
         db.add(to_add)
         my_order+=f"""
