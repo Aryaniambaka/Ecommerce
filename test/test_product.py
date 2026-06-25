@@ -29,10 +29,12 @@ def test_createproduct(Seller_auth_client,session):
     product = session.query(model.Product).filter(
         model.Product.productId == productid
     ).first()
-    assert product
-    assert os.path.exists(product.img1)
-    assert os.path.exists(product.img2)
-    assert os.path.exists(product.video1)
+    try:
+        assert product
+        assert os.path.exists(product.img1)
+        assert os.path.exists(product.img2)
+        assert os.path.exists(product.video1)
+    finally:
     os.remove(product.img1)
     os.remove(product.img2)
     os.remove(product.video1)
