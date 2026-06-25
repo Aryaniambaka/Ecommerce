@@ -35,10 +35,10 @@ def test_createproduct(Seller_auth_client,session):
         assert os.path.exists(product.img2)
         assert os.path.exists(product.video1)
     finally:
-    os.remove(product.img1)
-    os.remove(product.img2)
-    os.remove(product.video1)
-    session.close()
+        os.remove(product.img1)
+        os.remove(product.img2)
+        os.remove(product.video1)
+        session.close()
 
 
 def test_myproduct(Seller_auth_client,session):
@@ -62,7 +62,7 @@ def test_myproduct(Seller_auth_client,session):
     response1 = Seller_auth_client.get("/seller/myproduct")
     try:
         assert response1.status_code==200
-        assert response1.json()["ProductName"]=="Face wash"
+        assert response1.json()[0]["ProductName"]=="Face Wash"#flattened list
     finally:
         os.remove(product.img1)
         os.remove(product.img2)
