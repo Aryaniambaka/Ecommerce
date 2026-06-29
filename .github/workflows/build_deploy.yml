@@ -11,6 +11,7 @@ jobs:
       name: testing
 
     env:
+      DEV_DB: ${{ secrets.DEV_DB }}
       TEST_DB: ${{ secrets.TEST_DB }}
       SECRET_KEY_1: ${{ secrets.SECRET_KEY_1 }}
       ALGORITHM_1: ${{ secrets.ALGORITHM_1 }}
