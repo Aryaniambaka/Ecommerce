@@ -69,3 +69,7 @@ https://roadmap.sh/projects/scalable-ecommerce-platform
 ## License
 
 This project is for learning and educational purposes.
+<img width="810" height="858" alt="image" src="https://github.com/user-attachments/assets/deb5f645-21ae-4161-8cc2-56b1d982b112" />
+<img width="810" height="324" alt="image" src="https://github.com/user-attachments/assets/ab37c43e-e262-46a0-abfd-fe959c9790ed" />
+
+
