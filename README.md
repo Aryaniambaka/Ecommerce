@@ -61,7 +61,10 @@ Dockerfile
 docker-compose.yml
 .github/workflows/
 ```
-
+## Project Idea
+```
+https://roadmap.sh/projects/ecommerce-api
+```
 ## License
 
 This project is for learning and educational purposes.
