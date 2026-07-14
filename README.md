@@ -71,5 +71,7 @@ https://roadmap.sh/projects/scalable-ecommerce-platform
 This project is for learning and educational purposes.
 <img width="810" height="858" alt="image" src="https://github.com/user-attachments/assets/deb5f645-21ae-4161-8cc2-56b1d982b112" />
 <img width="810" height="324" alt="image" src="https://github.com/user-attachments/assets/ab37c43e-e262-46a0-abfd-fe959c9790ed" />
+<img width="536" height="950" alt="HabitForge_dev - public" src="https://github.com/user-attachments/assets/d0386172-6671-405e-8296-cb428c5d64d8" />
+
 
 
