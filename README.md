@@ -1,6 +1,9 @@
 # Ecommerce API
 
 A backend Ecommerce REST API built with **FastAPI**, **PostgreSQL**, and **SQLAlchemy**. The project includes user authentication, product management, cart functionality, order processing, database migrations, Docker support, and CI/CD with GitHub Actions.
+## Infrastructure Note
+
+This project was previously deployed on an Azure Virtual Machine using GitHub Actions for automated CI/CD. To avoid recurring cloud costs after development, the VM was intentionally decommissioned. The deployment configuration and CI/CD pipeline are still included in the repository and can be reused by provisioning a new server and updating the deployment secrets.
 
 ## Features
 
